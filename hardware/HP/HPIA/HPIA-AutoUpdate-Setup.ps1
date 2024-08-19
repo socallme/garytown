@@ -216,7 +216,7 @@ Function Run-HPIA {
         $Operation = "Analyze",
         [Parameter(Mandatory=$false)]
         [ValidateSet("All", "BIOS", "Drivers", "Software", "Firmware", "Accessories","BIOS,Drivers")]
-        $Category = "Drivers",
+        $Category = "BIOS, Firmware, Drivers",
         [Parameter(Mandatory=$false)]
         [ValidateSet("All", "Critical", "Recommended", "Routine")]
         $Selection = "All",
