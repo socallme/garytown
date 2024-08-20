@@ -29,7 +29,7 @@ catch {throw}
 #Script to Trigger:
 $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ep bypass -file `"$ScriptStagingFolder\HPIAUpdateService.ps1`""
 #When it runs: Wednesdays at 7:15 PM w/ 6 hour random delay
-$trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Wednesday -At '7:15 PM' -RandomDelay "06:00"
+$trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Wednesday -At '4:15 PM' -RandomDelay "06:00"
 #Run as System
 $Prin = New-ScheduledTaskPrincipal -UserId "SYSTEM" -RunLevel Highest
 #Stop Task if runs more than 60 minutes
