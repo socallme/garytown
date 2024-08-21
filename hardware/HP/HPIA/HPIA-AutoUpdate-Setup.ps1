@@ -377,7 +377,7 @@ else {
 
 
 
-Run-HPIA -Operation Analyze -Category 'Drivers, BIOS, Firmware' -Selection All -Action Install -LogFolder $HPIAStagingLogfFiles -ReportsFolder $HPIAStagingReports -HPIAInstallPath $HPIAStagingProgram
+Run-HPIA -Operation Analyze -Category 'BIOS,Drivers' -Selection All -Action Install -LogFolder $HPIAStagingLogfFiles -ReportsFolder $HPIAStagingReports -HPIAInstallPath $HPIAStagingProgram
 #Stop-Transcript
 
 '@
