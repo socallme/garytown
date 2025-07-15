@@ -80,11 +80,14 @@ ForEach ($ADGroup in $ADGroups){
 $ADUsers = @(
 @{Name = "CMAdmin"; GivenName = "ConfigMgr"; Surname = "Admin" ; Description = "Full Administrator in ConfigMgr"; Group = @("CM Full Admins", "Certificate Admins") }
 @{Name = "CM_SSRS"; GivenName = "SQL"; Surname = "Reporting Services" ; Description = "SSRS Account"; LogonWorkstations = "Null"; Group = "SQL Admins"}
-@{Name = "CM_DJ"; GivenName = "ConfigMgr"; Surname = "Domain Join" ; Description = "Domain Join Account"; LogonWorkstations = "Null"}
+@{Name = "CM_DJ"; GivenName = "ConfigMgr"; Surname = "Domain Join" ; Description = "Domain Join Account"}
 @{Name = "CM_NA"; GivenName = "ConfigMgr"; Surname = "Network Access" ; Description = "Network Access Account"; LogonWorkstations = "Null"}
 @{Name = "CM_CP_Servers"; GivenName = "ConfigMgr"; Surname = "ClientPush Servers" ; Description = "Client Push Servers"; Group = "Local Admins Servers"}
 @{Name = "CM_CP_Workstations"; GivenName = "ConfigMgr"; Surname = "ClientPush Workstations" ; Description = "Client Push Workstations"; Group = "Local Admins Workstations"}
 
+#SQL Accounts
+@{Name = "SQLCMAgent"; GivenName = "SQL"; Surname = "CM Agent" ; Description = "SQL Agent in ConfigMgr Service Account"}
+@{Name = "SQLCMSvc"; GivenName = "SQL"; Surname = "CM Service" ; Description = "SQL Service in ConfigMgr Service Account"}
 
 #Test Accounts:
 #@{Name = "Gary.Blok"; GivenName = "Gary"; Surname = "Blok" ; Description = "ME"; Group = @("Local Admins Workstations","Domain Admins", "CM Full Admins","CM App Deploy Users")}

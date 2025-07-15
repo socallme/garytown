@@ -1,44 +1,43 @@
 $ScriptName = 'dell.garytown.com'
-$ScriptVersion = '24.06.10.01'
+$ScriptVersion = '25.4.30.13.12'
 
 #region Initialize
 
+$ComputerSystem = (Get-CimInstance -ClassName Win32_ComputerSystem)
+$Manufacturer = ($ComputerSystem).Manufacturer
+$Model = ($ComputerSystem).Model
+$SystemSKUNumber = ($ComputerSystem).SystemSKUNumber
+$SerialNumber = Get-CimInstance -ClassName Win32_BIOS | Select-Object -ExpandProperty SerialNumber
 
-$Manufacturer = (Get-CimInstance -Class:Win32_ComputerSystem).Manufacturer
-$Model = (Get-CimInstance -Class:Win32_ComputerSystem).Model
-$SystemSKUNumber = (Get-CimInstance -ClassName Win32_ComputerSystem).SystemSKUNumber
-if ($Manufacturer -match "Dell"){
-    $Manufacturer = "Dell"
-    <#
-    $DellEnterprise = Test-DCUSupport
-    if ($DellEnterprise -eq $true) {
-        Write-Host "Running $ScriptName - $ScriptVersion" -ForegroundColor Green
-        Write-Host -ForegroundColor Green "Dell System Supports Dell Command Update"
-        Write-Host -ForegroundColor Green " Enabling Dell Functions: https://raw.githubusercontent.com/OSDeploy/OSD/master/cloud/modules/devicesdell.psm1"
-        Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OSDeploy/OSD/master/cloud/modules/devicesdell.psm1')
-    }
-    if ($env:SystemDrive -eq 'X:') {
-        $WindowsPhase = 'WinPE'
-    }
-    else {
-        $WindowsPhase = 'Windows'
-    }
-    write-output "Running in Windows Phase: $WindowsPhase"
 
-    #region Windows
-    if ($WindowsPhase -eq 'Windows') {
-        #Load OSD and Azure stuff
-        Write-Host -ForegroundColor Green "[+] Installing Dell Command Update"
-        osdcloud-InstallDCU
-        Write-Host -ForegroundColor Green "[+] Running Dell Command Update Drivers"
-        osdcloud-RunDCU -UpdateType driver
-        Write-Host -ForegroundColor Green "[+] Running Dell Command Update BIOS"
-        osdcloud-RunDCU -UpdateType bios
-        Write-Host -ForegroundColor Green "[+] Setting Dell Command Update to Auto Update"
-        osdcloud-DCUAutoUpdate
-    }
-    #endregion
-    #>
-    Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/gwblok/garytown/master/hardware/Dell/CommandUpdate/CMSL/Dell-CMSL.ps1')
-    
+Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/gwblok/garytown/refs/heads/master/hardware/Dell/CommandUpdate/EMPS/Dell-EMPS.ps1')
+Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/gwblok/garytown/refs/heads/master/hardware/Dell/CommandUpdate/EMPS/Dell-EMPSWarranty.ps1')
+
+Write-Host -ForegroundColor Green "[+] Function Invoke-MMSDemo2025"
+function Invoke-MMSDemo2025 {
+    Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/gwblok/garytown/refs/heads/master/hardware/Dell/CommandUpdate/EMPS/Dell-MMSDemo.ps1')
 }
+
+Write-Host -ForegroundColor Cyan "Manufacturer:       " -NoNewline ; Write-Host  -ForegroundColor Yellow "$Manufacturer"
+Write-Host -ForegroundColor Cyan "Model:              " -NoNewline ; Write-Host  -ForegroundColor Yellow "$Model"
+Write-Host -ForegroundColor Cyan "System SKU Number:  " -NoNewline ; Write-Host  -ForegroundColor Yellow "$SystemSKUNumber"
+Write-Host -ForegroundColor Cyan "Serial Number:      " -NoNewline ; Write-Host  -ForegroundColor Yellow "$SerialNumber"
+
+Write-Host -ForegroundColor Green "[+] Function: Get-DellDeviceDetails"
+Write-Host -ForegroundColor Green "[+] Function: Get-DellDeviceDriverPack"
+Write-Host -ForegroundColor Green "[+] Function: Get-DellSupportedModels"
+Write-Host -ForegroundColor Green "[+] Function: Get-DCUVersion"
+Write-Host -ForegroundColor Green "[+] Function: Get-DCUInstallDetails"
+Write-Host -ForegroundColor Green "[+] Function: Get-DCUExitInfo"
+Write-Host -ForegroundColor Green "[+] Function: Get-DCUAppUpdates"
+#Write-Host -ForegroundColor Green "[+] Function: Install-DCU"
+Write-Host -ForegroundColor Green "[+] Function: Set-DCUSettings"
+Write-Host -ForegroundColor Green "[+] Function: Get-DCUSettings"
+Write-Host -ForegroundColor Green "[+] Function: Invoke-DCU"
+Write-Host -ForegroundColor Green "[+] Function: Get-DCUUpdateList"
+#Write-Host -ForegroundColor Green "[+] Function: New-DCUCatalogFile"
+#Write-Host -ForegroundColor Green "[+] Function: New-DCUOfflineCatalog"
+Write-Host -ForegroundColor Green "[+] Function: Get-DellBIOSUpdates"
+Write-Host -ForegroundColor Green "[+] Function: Get-DellWarrantyInfo (-Cleanup)" #Temporarily Installs Dell Command Integration Suite to gather warranty info
+#Write-Host -ForegroundColor Green "[+] Function: Invoke-DellIntuneAppPublishScript" #Not yet implemented
+

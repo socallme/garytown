@@ -1,13 +1,26 @@
-#Script Returns the Disk Number for the Desired Disk for installing Windows to during OS
-#Get NVMe Disk
-$BusType = 'NVMe'
-$Disks = Get-Disk | Where-Object {$_.BusType -Match $BusType}
-#If Non-Found, just use the smallest disk size:
+#Script Returns the Disk Number for the Desired Disk for installing Windows to during OSD
+#https://garytown.com/osd-with-multi-disk-configs
+#https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-disk
+
+#issue where in WinPE it randomly doesn't show the disk, like 1 in 100...
+$Disks = Get-Disk
 if (!($Disks)){
-    $DiskNumber = (get-disk | Where-Object {$_.size -eq ((get-disk | Where-Object {$_.BusType -notmatch "USB"}).size | measure -Minimum).Minimum}).Number
+    restart-service smphost
+    start-sleep 5
 }
-#If found, get the smallest one (just incase there is more than one)
-else{
-    $DiskNumber = ($Disks | Where-Object {$_.size -eq ((get-disk | Where-Object {$_.BusType -match $BusType}).size | measure -Minimum).Minimum}).Number
+
+$BusTypes = @('NVMe', 'SATA')
+#if can't find NVMe, grab something else, but NOT these!
+$BusTypesSkip = @("Fiber Channel", "USB", "iSCSI", "Storage Spaces")
+#minimum size advised for system build (OS + programs + data)
+$MinSize = 200GB
+$DiskProps = { $_.BusType -in $BusTypes -and $_.BusType -notin $BusTypesSkip -and $_.Size -ge $MinSize }
+$Disks = Get-Disk | Where-Object $DiskProps
+if (-not ($Disks)) {
+    restart-service smphost
+    Start-Sleep -Seconds 5
+    $Disks = Get-Disk | Where-Object $DiskProps
 }
+if (-not $Disks) { exit '0x80070490'} #unable to find a volume
+$DiskNumber = ($Disks | Sort-Object Size | Select-Object -First 1).Number
 return $DiskNumber
